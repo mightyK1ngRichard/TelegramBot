@@ -1,4 +1,5 @@
 # created by virtualenv automatically
-/lib
-/bin
 screen.png
+.DS_Store
+.idea/
+pyvenv.cfg

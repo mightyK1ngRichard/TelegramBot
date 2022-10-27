@@ -1,9 +1,16 @@
 # Copyright © 2022 mightyK1ngRichard <dimapermyakov55@gmail.com>
 
 from telebot import TeleBot, types
-from main import TOKEN
 from random import randint
 
+# import os
+# from dotenv import load_dotenv
+
+
+# Доработать.
+# TOKEN = str(os.getenv('TOKEN'))
+
+TOKEN = '5715759447:AAFCFHQ9M1xLp_KRcKKe2Bqk_XORZXXo5vg'
 bot = TeleBot(TOKEN)
 
 
@@ -15,8 +22,9 @@ def start(message):
 @bot.message_handler(content_types=['text'])
 def get_text(message):
     if message.text == '🎲 Рандомное число':
-        bot.send_message(message.chat.id, 'Выберите диапазон!\n Введите начало(число): ')
-        bot.register_next_step_handler(message, number)
+        # bot.send_message(message.chat.id, 'Выберите диапазон!\n Введите начало(число): ')
+        # bot.register_next_step_handler(message, number)
+        bot.send_message(message.chat.id, str(randint(1, 1000)))
     elif message.text == '📶 Соц.сети':
         markup_reply = types.ReplyKeyboardMarkup(resize_keyboard=True)
         buttons = [
@@ -58,9 +66,9 @@ def menu(message, text):
     return bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode='markdown')
 
 
-def number(message):
-    number = int(message.text)
-    bot.send_message(message.chat.id, f'Ваша число {randint(0, number)}.')
+# def number(message):
+#     number = int(message.text)
+#     bot.send_message(message.chat.id, f'Ваша число {randint(0, number)}.')
 
 
 if __name__ == '__main__':

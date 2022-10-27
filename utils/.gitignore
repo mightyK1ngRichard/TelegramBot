@@ -1,5 +1,6 @@
 # created by virtualenv automatically
 screen.png
 .DS_Store
-.idea/
+../.idea/
 pyvenv.cfg
+utils/.env

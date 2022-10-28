@@ -138,7 +138,7 @@ def bot_message(message):
         elif message.text == '👨‍🔬 Стикер гения':
             stick = open('фото/илон.jpg', 'rb')
             bot.send_sticker(message.chat.id, stick)
-    
+
         elif message.text == '🔑 Шпора':
             stick = open('фото/морзе.jpg', 'rb')
             bot.send_photo(message.chat.id, stick)

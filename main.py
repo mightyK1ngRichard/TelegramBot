@@ -4,13 +4,12 @@ from telebot import TeleBot, types
 from random import randint
 from helpScripts.tests import TIME_TABLE
 from helpScripts.LessonBot import TOKEN
-import os
-from dotenv import load_dotenv
+
+# import os
+# from dotenv import load_dotenv
 
 # Доработать.
 # TOKEN = str(os.getenv('TOKEN'))
-
-
 bot = TeleBot(TOKEN)
 
 

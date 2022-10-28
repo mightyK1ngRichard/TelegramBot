@@ -16,11 +16,6 @@ from helpScripts.LessonBot import TOKEN
 bot = TeleBot(TOKEN)
 
 
-@bot.message_handler(commands=['start'])
-def start(message: types.Message):
-    menu(message, f'Привет, *{message.from_user.first_name} {message.from_user.last_name}*!')
-
-
 @bot.message_handler(content_types=['text'])
 def get_text(message: types.Message):
     if message.text == '🎲 Рандомное число':
@@ -70,24 +65,6 @@ def get_time_table_numerator(message: types.Message):
     menu(message, 'Выберите пункт:')
 
 
-def get_user_number(message: types.Message):
-    start_range, end_range = message.text.split(', ')
-    bot.send_message(message.chat.id, f"Ваше число: {str(randint(int(start_range.strip()), int(end_range.strip())))}")
-    menu(message, 'Выберите пункт меню.')
-
-
-def menu(message: types.Message, text: str):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    button = [
-        types.KeyboardButton('🎲 Рандомное число'),
-        types.KeyboardButton('⏱ Моё расписание'),
-        types.KeyboardButton('📶 Связь со мной'),
-        types.KeyboardButton('📷 Фото')
-    ]
-    markup.add(*button)
-    return bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode='markdown')
-
-
 def choose_social_network(message: types.Message):
     if message.text == 'GitHub':
         bot.send_message(message.chat.id, 'https://github.com/mightyK1ngRichard')
@@ -125,6 +102,29 @@ def social_network(message: types.Message):
     markup_reply.add(*buttons)
     msg = bot.send_message(message.chat.id, 'Выберите соц.сети:', reply_markup=markup_reply)
     bot.register_next_step_handler(msg, choose_social_network)
+
+
+def get_user_number(message: types.Message):
+    start_range, end_range = message.text.split(', ')
+    bot.send_message(message.chat.id, f"Ваше число: {str(randint(int(start_range.strip()), int(end_range.strip())))}")
+    menu(message, 'Выберите пункт меню.')
+
+
+@bot.message_handler(commands=['start'])
+def start(message: types.Message):
+    menu(message, f'Привет, *{message.from_user.first_name} {message.from_user.last_name}*!')
+
+
+def menu(message: types.Message, text: str):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    button = [
+        types.KeyboardButton('🎲 Рандомное число'),
+        types.KeyboardButton('⏱ Моё расписание'),
+        types.KeyboardButton('📶 Связь со мной'),
+        types.KeyboardButton('📷 Фото')
+    ]
+    markup.add(*button)
+    return bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode='markdown')
 
 
 if __name__ == '__main__':

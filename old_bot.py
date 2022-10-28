@@ -36,10 +36,13 @@ def bot_message(message):
             back = types.KeyboardButton('⬅️ Назад')
             markup.add(item1, item2, item3, back)
             bot.send_message(message.chat.id, 'Выберите интервал', reply_markup=markup)
+
         elif message.text == 'от 0 до 10':
             bot.send_message(message.chat.id, 'Ваше число: ' + str(random.randint(0, 10)))
+
         elif message.text == 'от 0 до 100':
             bot.send_message(message.chat.id, 'Ваше число: ' + str(random.randint(0, 100)))
+
         elif message.text == 'от 0 до 1000':
             bot.send_message(message.chat.id, 'Ваше число: ' + str(random.randint(0, 1000)))
 
@@ -112,33 +115,30 @@ def bot_message(message):
             stick = open('фото/Неверно.png', 'rb')
             bot.send_sticker(message.chat.id, stick)
 
-
         elif message.text == '📸️ Фото':
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            item1 = types.KeyboardButton('🔑 Шпора')
-            item2 = types.KeyboardButton('🏎 Стикер меня')
-            item3 = types.KeyboardButton('👨‍🔬 Стикер гения')
-            back = types.KeyboardButton('⬅️ Назад')
-            markup.add(item1, item2, item3, back)
+            items = [types.KeyboardButton('🔑 Шпора'),
+                     types.KeyboardButton('🏎 Стикер меня'),
+                     types.KeyboardButton('👨‍🔬 Стикер гения'),
+                     types.KeyboardButton('⬅️ Назад')]
+            markup.add(*items)
             bot.send_message(message.chat.id, 'Выбирай фотографию! ', reply_markup=markup)
-
 
         elif message.text == '⬅️ Назад':
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            item1 = types.KeyboardButton('🎲 Рандомное число')
-            item2 = types.KeyboardButton('🌦 Погода')
-            item3 = types.KeyboardButton('📈 Курсы валют')
-            item4 = types.KeyboardButton('📚 Информация')
-            item5 = types.KeyboardButton('🎮 Game')
-            item6 = types.KeyboardButton('📸️ Фото')
-            markup.add(item1, item2, item3, item4, item5, item6)
+            items = [types.KeyboardButton('🎲 Рандомное число'),
+                     types.KeyboardButton('🌦 Погода'),
+                     types.KeyboardButton('📈 Курсы валют'),
+                     types.KeyboardButton('📚 Информация'),
+                     types.KeyboardButton('🎮 Game'),
+                     types.KeyboardButton('📸️ Фото')]
+            markup.add(*items)
             bot.send_message(message.chat.id, '⬅️ Назад', reply_markup=markup)
-
 
         elif message.text == '👨‍🔬 Стикер гения':
             stick = open('фото/илон.jpg', 'rb')
             bot.send_sticker(message.chat.id, stick)
-
+    
         elif message.text == '🔑 Шпора':
             stick = open('фото/морзе.jpg', 'rb')
             bot.send_photo(message.chat.id, stick)
@@ -147,25 +147,21 @@ def bot_message(message):
             stick = open('фото/ламба.jpg', 'rb')
             bot.send_sticker(message.chat.id, stick)
 
-
         elif message.text == '🎮 Game':
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            item1 = types.KeyboardButton('Brawl stars')
-            item2 = types.KeyboardButton('PUBG mobile')
-            item3 = types.KeyboardButton('Clash of clans')
-            item4 = types.KeyboardButton('VK')
-            back = types.KeyboardButton('⬅️ Назад')
-            markup.add(item1, item2, item3, item4, back)
+            items = [types.KeyboardButton('Brawl stars'),
+                     types.KeyboardButton('PUBG mobile'),
+                     types.KeyboardButton('Clash of clans'),
+                     types.KeyboardButton('VK'),
+                     types.KeyboardButton('⬅️ Назад')]
+            markup.add(*items)
             bot.send_message(message.chat.id, '🎮 Game', reply_markup=markup)
-
 
         elif message.text == 'PUBG mobile':
             bot.send_message(message.chat.id, 'Welcome to my clan, keep its name: V АТАКЕ')
 
-
         elif message.text == 'Clash of clans':
             bot.send_message(message.chat.id, 'Welcome to my clan, keep your hashtag: #YUJ92Y0Q')
-
 
         elif message.text == 'VK':
             bot.send_message(message.chat.id, 'Keep my vk: https://vk.com/boss_permyakoovv')
@@ -175,6 +171,7 @@ def bot_message(message):
 
         elif message.text.splite().lower() in ['Привет', 'Hi', 'Hello', 'Прив', 'Здр']:
             bot.send_message(message.chat.id, 'Ещё раз привет! Я бот Дмитрия! Чем могу помочь?')
+
         else:
             bot.reply_to(message, 'Я тебя не понимаю 🤷‍♂')
 

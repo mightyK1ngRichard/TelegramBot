@@ -1,97 +1,130 @@
 # Copyright © 2022 mightyK1ngRichard <dimapermyakov55@gmail.com>
-"""
-Этот файл чисто как теория. Запускать его не надо.
-
-Документация - https://pypi.org/project/pyTelegramBotAPI/
-
-# message - <class 'telebot.types.Message'>
-# https://core.telegram.org/bots/api#message
-Прикольная штука:
-text_for_user = f'Привет, <b> {message.from_user.first_name} {message.from_user.last_name}</b>'
-bot.send_message(message.chat.id, text_for_user, parse_mode='html')
-"""
 
 from telebot import TeleBot, types
+from random import randint
+from helpScripts.tests import TIME_TABLE
+from helpScripts.LessonBot import TOKEN
 
-TOKEN = ''
+# import os
+# from dotenv import load_dotenv
+
+
+# Доработать.
+# TOKEN = str(os.getenv('TOKEN'))
+
+
 bot = TeleBot(TOKEN)
 
 
 @bot.message_handler(commands=['start'])
-def start(message):
-    markup_inline = types.InlineKeyboardMarkup()
-    buttons = [
-        types.InlineKeyboardButton('Посетить GitHub', url='https://github.com/mightyK1ngRichard'),
-        types.InlineKeyboardButton('Посетить VK', callback_data='VK')
-    ]
-    markup_inline.add(*buttons)
-
-    bot.send_message(message.chat.id, 'GitHub:', reply_markup=markup_inline)
-
-
-@bot.message_handler(content_types=['photo'])
-def get_user_photo(message):
-    bot.send_message(message.chat.id, 'Прикольно..')
-
-
-@bot.message_handler(content_types=['sticker'])
-def get_user_sticker(message):
-    bot.send_message(message.chat.id, 'Ну типо... Ну прикольно')
-
-
-@bot.message_handler(commands=['info'])
-def go_to_github(message):
-    markup_inline = types.InlineKeyboardMarkup()
-    buttons = [
-        types.InlineKeyboardButton('Посетить GitHub', url='https://github.com/mightyK1ngRichard'),
-        types.InlineKeyboardButton('Посетить VK', callback_data='VK')
-    ]
-    markup_inline.add(*buttons)
-
-    bot.send_message(message.chat.id, 'GitHub:', reply_markup=markup_inline)
-
-
-@bot.callback_query_handler(func=lambda call: True)
-def answer(call):
-    if call.data == 'VK':
-        markup_reply = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        button = types.KeyboardButton('Мой VK')
-        markup_reply.add(button)
-
-        bot.send_message(call.message.chat.id, 'Нажми кнопку:', reply_markup=markup_reply)
-
-
-@bot.message_handler(commands=[''])
-def help_user(message):
-    # resize_keyboard - Подстраиваются под размер монитора.
-    # row_width - сколько кнопок в ряду.
-    markup_reply = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    buttons = [
-        types.KeyboardButton('Вэб Сайт'),
-        types.KeyboardButton('Start')
-    ]
-    markup_reply.add(*buttons)
-    bot.send_message(message.chat.id, 'Выберите кнопку:', reply_markup=markup_reply)
-
-
-@bot.message_handler(commands=['info'])
-def message_user(message):
-    if message.text.lower() in ['привет', 'здравствуй', 'hi', 'здарова']:
-        bot.send_message(message.chat.id, f'Привет, *{message.from_user.first_name} {message.from_user.last_name}*',
-                         parse_mode='markdown')
-
-    elif message.text.lower() in ['фото', 'скинь фото', 'фотка', 'photo']:
-        photo = open('screen.png', 'rb')
-        bot.send_photo(message.chat.id, photo)
-
-    elif message.text.split().lower() == 'вэб сайт':
-        bot.send_message(message.chat.id, 'https://github.com/mightyK1ngRichard')
+def start(message: types.Message):
+    menu(message, f'Привет, *{message.from_user.first_name} {message.from_user.last_name}*!')
 
 
 @bot.message_handler(content_types=['text'])
-def get_text(message):
-    if message.text == 'Мой VK':
+def get_text(message: types.Message):
+    if message.text == '🎲 Рандомное число':
+        # bot.send_message(message.chat.id, 'Выберите диапазон!\n Введите начало(число): ')
+        # bot.register_next_step_handler(message, number)
+        # bot.send_message(message.chat.id, str(randint(1, 1000)))
+        msg = bot.send_message(message.chat.id, 'Введите диапозон в формате: 0, 100. Где 0 - начало, 100 конец.')
+        bot.register_next_step_handler(msg, get_user_number)
+
+    elif message.text == '⏱ Моё расписание':
+        markup = types.InlineKeyboardMarkup()
+        buttons = [
+            types.InlineKeyboardButton('Числитель', callback_data='числитель'),
+            types.InlineKeyboardButton('Знаменатель', callback_data='знаменатель')
+        ]
+        markup.add(*buttons)
+        bot.send_message(message.chat.id, 'Выберите:', reply_markup=markup)
+        # bot.send_message(message.chat.id, 'зщ')
+
+    elif message.text == '📶 Связь со мной':
+        social_network(message)
+
+    elif message.text == '📷 Фото':
+        photo = open('pictures/time-table.png', 'rb')
+        bot.send_photo(message.chat.id, photo)
+
+    elif message.text == '🔙 Назад':
+        menu(message, 'Выберите пункт меню:')
+
+    elif message.text == 'Крестики нолики':
+        pass
+
+    else:
+        bot.send_message(message.chat.id, 'Я тебя не понимаю! Нажми на кнопку!')
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def answer(call: types.CallbackQuery):
+    if call.data == 'числитель':
+        msg = bot.send_message(call.message.chat.id, 'Введите день недели:')
+        bot.register_next_step_handler(msg, get_time_table_numerator)
+
+
+def get_time_table_numerator(message: types.Message):
+    res = '\n'.join(TIME_TABLE['числитель'][message.text])
+    bot.send_message(message.chat.id, f'Расписание на: "{message.text}"\n\n{res}')
+    menu(message, 'Выберите пункт:')
+
+
+def get_user_number(message: types.Message):
+    start_range, end_range = message.text.split(', ')
+    bot.send_message(message.chat.id, f"Ваше число: {str(randint(int(start_range.strip()), int(end_range.strip())))}")
+    menu(message, 'Выберите пункт меню.')
+
+
+def menu(message: types.Message, text: str):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    button = [
+        types.KeyboardButton('🎲 Рандомное число'),
+        types.KeyboardButton('⏱ Моё расписание'),
+        types.KeyboardButton('📶 Связь со мной'),
+        types.KeyboardButton('📷 Фото')
+    ]
+    markup.add(*button)
+    return bot.send_message(message.chat.id, text, reply_markup=markup, parse_mode='markdown')
+
+
+def choose_social_network(message: types.Message):
+    if message.text == 'GitHub':
         bot.send_message(message.chat.id, 'https://github.com/mightyK1ngRichard')
+
+    elif message.text == 'VK':
+        bot.send_message(message.chat.id, 'https://vk.com/mightyk1ngrichard')
+
+    elif message.text == 'VK-memes':
+        bot.send_message(message.chat.id, 'https://vk.com/iu5memes')
+
+    elif message.text == 'Instagram':
+        bot.send_message(message.chat.id, 'https://www.instagram.com/permyakoovv/')
+
+    elif message.text == 'Gmail':
+        bot.send_message(message.chat.id, 'dimapermyakov55@gmail.com')
+
+    elif message.text == '🔙 Назад':
+        menu(message, 'Выберите пункт:')
+
+    else:
+        bot.send_message(message.chat.id, 'Я тебя не понимаю! Повторите попытку!')
+        menu(message, 'Выберите пункт:')
+
+
+def social_network(message: types.Message):
+    markup_reply = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    buttons = [
+        types.KeyboardButton('GitHub'),
+        types.InlineKeyboardButton('VK'),
+        types.InlineKeyboardButton('VK-memes'),
+        types.InlineKeyboardButton('Instagram'),
+        types.InlineKeyboardButton('Gmail'),
+        types.InlineKeyboardButton('🔙 Назад'),
+    ]
+    markup_reply.add(*buttons)
+    msg = bot.send_message(message.chat.id, 'Выберите соц.сети:', reply_markup=markup_reply)
+    bot.register_next_step_handler(msg, choose_social_network)
 
 
 if __name__ == '__main__':

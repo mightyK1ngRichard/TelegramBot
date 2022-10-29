@@ -66,10 +66,13 @@ def game() -> tuple:
             res = CARDS.pop(CARDS.index(choice(CARDS)))
             user_sum += res.number
             print(f'Выпала карта: {res.name} {res.suit}')
+
             if user_sum > 21:
                 return 'Вы проиграли!', user_sum, banker_sum
+
             elif user_sum == 21:
                 return 'Игрок победил', user_sum, banker_sum
+
         print(f'==> Сумма игрока = {user_sum}')
 
         # Ход банкира.
@@ -77,6 +80,7 @@ def game() -> tuple:
             res = CARDS.pop(CARDS.index(choice(CARDS)))
             print(f'Выпала карта: {res.name} {res.suit}')
             banker_sum += res.number
+
             if banker_sum > 21:
                 return 'Банкир проиграл!', user_sum, banker_sum
 
@@ -86,10 +90,12 @@ def game() -> tuple:
             elif (banker_sum > 15 and answer) or (banker_sum > user_sum and not answer):
                 flag_for_banker = False
                 print('Банкир закончил набирать карты!')
+                
                 if not answer and not flag_for_banker:
                     return ('Игрок победил', user_sum, banker_sum) if user_sum > banker_sum else (
                         'Ничья', user_sum, banker_sum) if user_sum == banker_sum else (
                         'Банкир победил', user_sum, banker_sum)
+
         print(f'==> Сумма банкира = {banker_sum}')
         print(f'\n{"-" * 30}\n')
 

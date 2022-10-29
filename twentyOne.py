@@ -64,6 +64,8 @@ def game() -> tuple:
             print(f'Выпала карта: {res.name} {res.suit}')
             if user_sum > 21:
                 return 'Вы проиграли!', user_sum, banker_sum
+            elif user_sum == 21:
+                return 'Игрок победил', user_sum, banker_sum
         print(f'==> Сумма игрока = {user_sum}')
 
         # Ход банкира.

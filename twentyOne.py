@@ -57,14 +57,14 @@ def game() -> tuple:
     banker_sum = 0
     flag_for_banker = True
     while True:
-        answer = bool(input('Взять или стоп? 1|0: '))
+        answer = True if input('Взять или стоп? 1|0: ') == '1' else False
         if answer:
             res = CARDS.pop(CARDS.index(choice(CARDS)))
             user_sum += res.number
             print(f'Выпала карта: {res.name} {res.suit}')
             if user_sum > 21:
                 return 'Вы проиграли!', user_sum, banker_sum
-        print(f'Сумма игрока = {user_sum}')
+        print(f'==> Сумма игрока = {user_sum}')
 
         # Ход банкира.
         if flag_for_banker:
@@ -81,7 +81,7 @@ def game() -> tuple:
                 flag_for_banker = False
                 print('Банкир закончил набирать карты!')
 
-        print(f'Сумма банкира = {banker_sum}')
+        print(f'==> Сумма банкира = {banker_sum}')
         print(f'\n{"-" * 30}\n')
 
 

@@ -74,7 +74,7 @@ def game() -> tuple:
             if banker_sum > 21:
                 return 'Банкир проиграл!', user_sum, banker_sum
 
-            if banker_sum == 21:
+            elif banker_sum == 21:
                 return 'Банкир победил', user_sum, banker_sum
 
             elif (banker_sum > 15 and answer) or (banker_sum > user_sum and not answer):

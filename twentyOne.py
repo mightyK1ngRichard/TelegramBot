@@ -90,8 +90,8 @@ def game() -> tuple:
                     return ('Игрок победил', user_sum, banker_sum) if user_sum > banker_sum else (
                         'Ничья', user_sum, banker_sum) if user_sum == banker_sum else (
                         'Банкир победил', user_sum, banker_sum)
-    print(f'==> Сумма банкира = {banker_sum}')
-    print(f'\n{"-" * 30}\n')
+        print(f'==> Сумма банкира = {banker_sum}')
+        print(f'\n{"-" * 30}\n')
 
 
 if __name__ == '__main__':

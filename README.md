@@ -4,3 +4,6 @@
 # Navigation.
 - [code of the bot.](https://github.com/mightyK1ngRichard/TelegramBot/blob/main/main.py)
 - [code of the old bot.](https://github.com/mightyK1ngRichard/TelegramBot/blob/main/helpScripts/oldBot.py)
+
+# Little video.
+![21](telebot.gif)

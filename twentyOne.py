@@ -90,7 +90,7 @@ def game() -> tuple:
             elif (banker_sum > 15 and answer) or (banker_sum > user_sum and not answer):
                 flag_for_banker = False
                 print('Банкир закончил набирать карты!')
-                
+
                 if not answer and not flag_for_banker:
                     return ('Игрок победил', user_sum, banker_sum) if user_sum > banker_sum else (
                         'Ничья', user_sum, banker_sum) if user_sum == banker_sum else (

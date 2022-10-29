@@ -10,45 +10,45 @@ class Card:
 
 
 CARDS = [
-    Card(name='шестёрка', suit='пики', number=6),
-    Card(name='семёрка', suit='пики', number=7),
-    Card(name='восьмёрка', suit='пики', number=8),
-    Card(name='девятка', suit='пики', number=9),
-    Card(name='десятка', suit='пики', number=10),
-    Card(name='валет', suit='пики', number=8),
-    Card(name='дама', suit='пики', number=9),
-    Card(name='король', suit='пики', number=10),
-    Card(name='туз', suit='пики', number=11),
+    Card(name='Шестёрка', suit='Пики', number=6),
+    Card(name='Семёрка', suit='Пики', number=7),
+    Card(name='Восьмёрка', suit='Пики', number=8),
+    Card(name='Девятка', suit='Пики', number=9),
+    Card(name='Десятка', suit='Пики', number=10),
+    Card(name='Валет', suit='Пики', number=8),
+    Card(name='Дама', suit='Пики', number=9),
+    Card(name='Король', suit='Пики', number=10),
+    Card(name='Туз', suit='Пики', number=11),
 
-    Card(name='шестёрка', suit='крести', number=6),
-    Card(name='семёрка', suit='крести', number=7),
-    Card(name='восьмёрка', suit='крести', number=8),
-    Card(name='девятка', suit='крести', number=9),
-    Card(name='десятка', suit='крести', number=10),
-    Card(name='валет', suit='крести', number=8),
-    Card(name='дама', suit='крести', number=9),
-    Card(name='король', suit='крести', number=10),
-    Card(name='туз', suit='крести', number=11),
+    Card(name='Шестёрка', suit='Крести', number=6),
+    Card(name='Семёрка', suit='Крести', number=7),
+    Card(name='Восьмёрка', suit='Крести', number=8),
+    Card(name='Девятка', suit='Крести', number=9),
+    Card(name='Десятка', suit='Крести', number=10),
+    Card(name='Валет', suit='Крести', number=8),
+    Card(name='Дама', suit='Крести', number=9),
+    Card(name='Король', suit='Крести', number=10),
+    Card(name='Туз', suit='Крести', number=11),
 
-    Card(name='шестёрка', suit='черви', number=6),
-    Card(name='семёрка', suit='черви', number=7),
-    Card(name='восьмёрка', suit='черви', number=8),
-    Card(name='девятка', suit='черви', number=9),
-    Card(name='десятка', suit='черви', number=10),
-    Card(name='валет', suit='черви', number=8),
-    Card(name='дама', suit='черви', number=9),
-    Card(name='король', suit='черви', number=10),
-    Card(name='туз', suit='черви', number=11),
+    Card(name='Шестёрка', suit='Черви', number=6),
+    Card(name='Семёрка', suit='Черви', number=7),
+    Card(name='Восьмёрка', suit='Черви', number=8),
+    Card(name='Девятка', suit='Черви', number=9),
+    Card(name='Десятка', suit='Черви', number=10),
+    Card(name='Валет', suit='Черви', number=8),
+    Card(name='Дама', suit='Черви', number=9),
+    Card(name='Король', suit='Черви', number=10),
+    Card(name='Туз', suit='Черви', number=11),
 
-    Card(name='шестёрка', suit='буби', number=6),
-    Card(name='семёрка', suit='буби', number=7),
-    Card(name='восьмёрка', suit='буби', number=8),
-    Card(name='девятка', suit='буби', number=9),
-    Card(name='десятка', suit='буби', number=10),
-    Card(name='валет', suit='буби', number=8),
-    Card(name='дама', suit='буби', number=9),
-    Card(name='король', suit='буби', number=10),
-    Card(name='туз', suit='буби', number=11),
+    Card(name='Шестёрка', suit='Буби', number=6),
+    Card(name='Семёрка', suit='Буби', number=7),
+    Card(name='Восьмёрка', suit='Буби', number=8),
+    Card(name='Девятка', suit='Буби', number=9),
+    Card(name='Десятка', suit='Буби', number=10),
+    Card(name='Валет', suit='Буби', number=8),
+    Card(name='Дама', suit='Буби', number=9),
+    Card(name='Король', suit='Буби', number=10),
+    Card(name='Туз', suit='Буби', number=11),
 ]
 
 
@@ -80,6 +80,8 @@ def game() -> tuple:
             elif (banker_sum > 15 and answer) or (banker_sum > user_sum and not answer):
                 flag_for_banker = False
                 print('Банкир закончил набирать карты!')
+                if not answer:
+                    return 'Ничья!', user_sum, banker_sum
 
         print(f'==> Сумма банкира = {banker_sum}')
         print(f'\n{"-" * 30}\n')

@@ -58,6 +58,9 @@ def game() -> tuple:
     flag_for_banker = True
     while True:
         answer = True if input('Взять или стоп? 1|0: ') == '1' else False
+        if not answer and not flag_for_banker:
+            return 'Игрок победил', user_sum, banker_sum if user_sum > banker_sum else 'Ничья', user_sum, banker_sum \
+                if user_sum == banker_sum else 'Банкир победил', user_sum, banker_sum
         if answer:
             res = CARDS.pop(CARDS.index(choice(CARDS)))
             user_sum += res.number

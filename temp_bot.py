@@ -12,13 +12,29 @@ bot = TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def start(message: types.Message):
-    menu(message, f'Привет, *{message.from_user.first_name} {message.from_user.last_name}*!')
+    text = f"""
+    Привет, *{message.from_user.first_name} {message.from_user.last_name if message.from_user.last_name is not None else ''}*! 
+    Я бета версия одного чувачка, и вот что я умею:
+    1. Могу помочь с расписанием ИУ5-33Б. (В будущем расширюсь)
+    2. Могу дать контакты админа.
+    3. Могу сыграть с тобой в 21 очко.
+    4. Могу отправить фотографию расписания. (Доработаюсь)
+    5. Могу выдать случайное число из заданного диапазона.
+    
+    Будьте осторожны, я мог не учесть некоторые "малость неумные" действия пользователя, приводящим к исключениям.
+    Если Вам удалось сделать такое "умное" действие, что даже я не учёл его возможность, напишите админу.
+    
+    *А так наслаждайтесь проигрышами банкиру!*
+"""
+    menu(message, text)
 
 
 @bot.message_handler(content_types=['text'])
 def main_text(message: types.Message):
     if message.text == '🎲 Рандомное число':
         msg = bot.send_message(message.chat.id, 'Введите диапозон в формате: 0, 100. Где 0 - начало, 100 конец.')
+        bot.send_message(message.chat.id, 'Вводите диапазон и помните про условия ввода!',
+                         reply_markup=types.ReplyKeyboardRemove(selective=True))
         bot.register_next_step_handler(msg, get_user_number)
 
     elif message.text == '⏱ Моё расписание':
@@ -132,7 +148,8 @@ def twenty_one(message: types.Message, data: tuple):
         bot.send_message(message.chat.id,
                          'НУ ТЫ ДЕБИЛ? Ну вот для кого я кнопки делал?!\nХорошо, что я умный и предугадал то, '
                          'что ты дебил!')
-        bot.send_video(message.chat.id, 'https://tenor.com/view/понасенков-переиграл-уничтожил-ponasenkov-gif-20047373')
+        bot.send_video(message.chat.id,
+                       'https://tenor.com/view/понасенков-переиграл-уничтожил-ponasenkov-gif-20047373')
         menu(message, 'Выберите пункт меню, дурачок: ')
         return
 
@@ -147,8 +164,6 @@ def game_second_step(message: types.Message, data: tuple):
                 '❗Ничья', user_sum, banker_sum) if user_sum == banker_sum else ('❗Банкир победил', user_sum, banker_sum)
             bot.send_message(message.chat.id,
                              text + f'{res_game}\nВаш результат: {user_sum_res}\nРезультат банкира: {bot_sum}')
-            bot.send_video(message.chat.id,
-                           'https://tenor.com/view/понасенков-переиграл-уничтожил-ponasenkov-gif-20047373')
             menu(message, 'Выберите пункт меню.')
             return
 
@@ -218,6 +233,8 @@ def game_second_step(message: types.Message, data: tuple):
         bot.send_message(message.chat.id,
                          'НУ ТЫ ДЕБИЛ? Ну вот для кого я кнопки делал?!\nХорошо, что я умный и предугадал то, '
                          'что ты дебил!')
+        bot.send_video(message.chat.id,
+                       'https://tenor.com/view/понасенков-переиграл-уничтожил-ponasenkov-gif-20047373')
         menu(message, 'Выберите пункт меню, дурачок: ')
         return
 
@@ -237,7 +254,7 @@ def call_answer(call: types.CallbackQuery):
         ]
         markup.add(*buttons)
         msg = bot.send_message(call.message.chat.id, 'Выберите день недели: ', reply_markup=markup)
-        bot.register_next_step_handler(msg, get_time_table_numerator, week_day='числитель')
+        bot.register_next_step_handler(msg, get_time_table, week_day='числитель')
 
     elif call.data == 'знаменатель':
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3)
@@ -252,7 +269,7 @@ def call_answer(call: types.CallbackQuery):
         ]
         markup.add(*buttons)
         msg = bot.send_message(call.message.chat.id, 'Выберите день недели: ', reply_markup=markup)
-        bot.register_next_step_handler(msg, get_time_table_numerator, week_day='знаменатель')
+        bot.register_next_step_handler(msg, get_time_table, week_day='знаменатель')
 
     elif call.data == 'старт':
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -264,10 +281,17 @@ def call_answer(call: types.CallbackQuery):
         bot.register_next_step_handler(msg, twenty_one, (0, 0, True))
 
 
-def get_time_table_numerator(message: types.Message, week_day: str):
-    res = '\n'.join(TIME_TABLE[week_day][message.text])
-    bot.send_message(message.chat.id, f'Расписание на "{message.text}":\n\n{res}')
-    menu(message, 'Выберите пункт:')
+def get_time_table(message: types.Message, week_day: str):
+    if message.text in ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']:
+        res = '\n'.join(TIME_TABLE[week_day][message.text])
+        bot.send_message(message.chat.id, f'Расписание на "{message.text}":\n\n{res}')
+        menu(message, 'Выберите пункт:')
+        return
+
+    else:
+        bot.send_message(message.chat.id, 'Ну дурак есть дурак!\nДля особо одарённых я добавил кнопки!')
+        menu(message, 'Выберите пункт:')
+        return
 
 
 def social_network(message: types.Message):
@@ -305,7 +329,9 @@ def choose_social_network(message: types.Message):
         menu(message, 'Выберите пункт:')
 
     else:
-        bot.send_message(message.chat.id, 'Я тебя не понимаю! Повторите попытку!')
+        bot.send_message(message.chat.id, 'Ну вот дурак, он и есть дурак!\nДля особо одарённых я добавил кнопки!')
+        menu(message, 'Выберите пункт, дурак:')
+        return
 
     menu(message, 'Выберите пункт:')
 

@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8893adae-7596-4525-9f22-b40133136d7f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpScripts/SwitchFilesHere.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpScripts/SwitchFilesHere.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpScripts/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpScripts/tests.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/temp_bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/temp_bot.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +45,7 @@
       <recent name="$PROJECT_DIR$/utils" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.temp_bot">
+  <component name="RunManager" selected="Python.main">
     <configuration name="SwitchFilesHere" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TelegramBot" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -156,9 +153,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.temp_bot" />
         <item itemvalue="Python.tests" />
-        <item itemvalue="Python.main" />
         <item itemvalue="Python.SwitchFilesHere" />
         <item itemvalue="Python.twentyOne" />
       </list>

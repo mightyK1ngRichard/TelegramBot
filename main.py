@@ -3,7 +3,7 @@
 from telebot import TeleBot, types
 from random import randint
 from random import choice
-from helpScripts.SECRET.SwitchFilesHere import CARDS, TIME_TABLE, TOKEN
+from helpScripts.SwitchFilesHere import CARDS, TIME_TABLE, TOKEN
 
 bot = TeleBot(TOKEN)
 

@@ -69,12 +69,9 @@ def main_text(message: types.Message):
 
 def twenty_one(message: types.Message, data: tuple):
     if message.text in ['Продолжить', 'Стоп']:
-        user_sum, banker_sum, flag_for_banker, answer = data
+        user_sum, banker_sum, flag_for_banker = data
         text = """"""
-        if answer:
-            answer = True if message.text == 'Продолжить' else False
-        # else:
-        #     answer = False
+        answer = True if message.text == 'Продолжить' else False
 
         if not answer and not flag_for_banker:
             res_game, user_sum_res, bot_sum = ('❗Вы победили', user_sum, banker_sum) if user_sum > banker_sum else (
@@ -137,7 +134,7 @@ def twenty_one(message: types.Message, data: tuple):
 
         # Переход.
         bot.send_message(message.chat.id, text)
-        all_data = (user_sum, banker_sum, flag_for_banker, answer)
+        all_data = (user_sum, banker_sum, flag_for_banker)
         if answer:
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
             buttons = [
@@ -147,8 +144,15 @@ def twenty_one(message: types.Message, data: tuple):
             markup.add(*buttons)
             msg = bot.send_message(message.chat.id, 'Выберите кнопку:', reply_markup=markup)
             bot.register_next_step_handler(msg, game_second_step, all_data)
+
         else:
-            bot.register_next_step_handler(message, game_second_step, all_data)
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            buttons = [
+                types.KeyboardButton('Стоп')
+            ]
+            markup.add(*buttons)
+            msg = bot.send_message(message.chat.id, 'Выберите кнопку:', reply_markup=markup)
+            bot.register_next_step_handler(msg, game_second_step, all_data)
 
     else:
         bot.send_message(message.chat.id,
@@ -162,9 +166,8 @@ def twenty_one(message: types.Message, data: tuple):
 
 def game_second_step(message: types.Message, data: tuple):
     if message.text in ['Продолжить', 'Стоп']:
-        user_sum, banker_sum, flag_for_banker, answer = data
-        if answer:
-            answer = True if message.text == 'Продолжить' else False
+        user_sum, banker_sum, flag_for_banker = data
+        answer = True if message.text == 'Продолжить' else False
 
         text = """"""
         if not answer and not flag_for_banker:
@@ -228,7 +231,7 @@ def game_second_step(message: types.Message, data: tuple):
 
         # Переход.
         bot.send_message(message.chat.id, text)
-        all_data = (user_sum, banker_sum, flag_for_banker, answer)
+        all_data = (user_sum, banker_sum, flag_for_banker)
         if answer:
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
             buttons = [
@@ -240,7 +243,13 @@ def game_second_step(message: types.Message, data: tuple):
             bot.register_next_step_handler(msg, twenty_one, all_data)
 
         else:
-            bot.register_next_step_handler(message, twenty_one, all_data)
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            buttons = [
+                types.KeyboardButton('Стоп')
+            ]
+            markup.add(*buttons)
+            msg = bot.send_message(message.chat.id, 'Выберите кнопку:', reply_markup=markup)
+            bot.register_next_step_handler(msg, twenty_one, all_data)
 
     else:
         bot.send_message(message.chat.id,
@@ -293,7 +302,7 @@ def call_answer(call: types.CallbackQuery):
         ]
         markup.add(*buttons)
         msg = bot.send_message(call.message.chat.id, 'Выберите кнопку!', reply_markup=markup)
-        bot.register_next_step_handler(msg, twenty_one, (0, 0, True, True))
+        bot.register_next_step_handler(msg, twenty_one, (0, 0, True))
 
 
 def get_time_table(message: types.Message, week_day: str):

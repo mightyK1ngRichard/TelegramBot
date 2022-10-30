@@ -1,6 +1,7 @@
 # Copyright © 2022 mightyK1ngRichard <dimapermyakov55@gmail.com>
 
 import json
+from random import randint
 
 
 class User:
@@ -19,17 +20,8 @@ def add_user() -> dict:
 
 
 def main():
-    # with open("data.json", "a") as write_file:
-    #     json.dump(add_user(), write_file)
-    lst = input('> ')
-    print(str(lst))
-    if ',' not in str(lst)[1:-1]:
-        print('ПОЫЛВТПОДВ')
-    try:
-        lst = list(map(int, lst))
-    except ValueError:
-        print('ИДИОт!')
-    print(lst)
+    with open("data.json", "a") as write_file:
+        json.dump(add_user(), write_file)
 
 
 if __name__ == '__main__':

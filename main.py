@@ -6,6 +6,7 @@ from random import choice
 from helpScripts.SwitchFilesHere import CARDS, TIME_TABLE, TOKEN
 
 bot = TeleBot(TOKEN)
+CARDS_LIST = list()
 
 
 @bot.message_handler(commands=['start'])
@@ -30,9 +31,8 @@ def start(message: types.Message):
 @bot.message_handler(content_types=['text'])
 def main_text(message: types.Message):
     if message.text == '🎲 Рандомное число':
-        msg = bot.send_message(message.chat.id, 'Введите диапозон в формате: 0, 100. Где 0 - начало, 100 конец.')
-        bot.send_message(message.chat.id, 'Вводите диапазон и помните про условия ввода!',
-                         reply_markup=types.ReplyKeyboardRemove(selective=True))
+        msg = bot.send_message(message.chat.id, 'Введите диапозон в формате: 0, 100.\nГде 0 - начало, 100 конец.',
+                               reply_markup=types.ReplyKeyboardRemove(selective=True))
         bot.register_next_step_handler(msg, get_user_number)
 
     elif message.text == '⏱ Моё расписание':
@@ -81,7 +81,7 @@ def twenty_one(message: types.Message, data: tuple):
             return
 
         elif answer:
-            res = CARDS.pop(CARDS.index(choice(CARDS)))
+            res = CARDS_LIST.pop(CARDS_LIST.index(choice(CARDS_LIST)))
             user_sum += res.number
             # bot.send_message(message.chat.id, f'Выпала карта: {res.name} {res.suit}')
             text += f'Выпала карта: {res.name} {res.suit}\n'
@@ -100,7 +100,7 @@ def twenty_one(message: types.Message, data: tuple):
         text += f'==> Сумма игрока = {user_sum}\n'
         # Ход банкира.
         if flag_for_banker:
-            res = CARDS.pop(CARDS.index(choice(CARDS)))
+            res = CARDS_LIST.pop(CARDS_LIST.index(choice(CARDS_LIST)))
             text += f'Выпала карта: {res.name} {res.suit}\n'
             banker_sum += res.number
 
@@ -166,7 +166,7 @@ def game_second_step(message: types.Message, data: tuple):
             return
 
         elif answer:
-            res = CARDS.pop(CARDS.index(choice(CARDS)))
+            res = CARDS_LIST.pop(CARDS_LIST.index(choice(CARDS_LIST)))
             user_sum += res.number
             text += f'Выпала карта: {res.name} {res.suit}\n'
             if user_sum > 21:
@@ -184,7 +184,7 @@ def game_second_step(message: types.Message, data: tuple):
         text += f'==> Сумма игрока = {user_sum}\n'
         # Ход банкира.
         if flag_for_banker:
-            res = CARDS.pop(CARDS.index(choice(CARDS)))
+            res = CARDS_LIST.pop(CARDS_LIST.index(choice(CARDS_LIST)))
             text += f'Выпала карта: {res.name} {res.suit}\n'
             banker_sum += res.number
 
@@ -270,6 +270,8 @@ def call_answer(call: types.CallbackQuery):
         bot.register_next_step_handler(msg, get_time_table, week_day='знаменатель')
 
     elif call.data == 'старт':
+        global CARDS_LIST
+        CARDS_LIST = CARDS[:]
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         buttons = [
             types.KeyboardButton('Продолжить'),
@@ -359,9 +361,9 @@ def get_user_number(message: types.Message):
         menu(message, 'Выберите пункт меню: ')
         return
 
-    start_range, end_range = res
+    start_range, end_range = sorted(res)
 
-    bot.send_message(message.chat.id, f"Ваше число: {str(randint(start_range, end_range))}")
+    bot.send_message(message.chat.id, f"Ваше число: {randint(start_range, end_range)}")
     menu(message, 'Выберите пункт меню.')
 
 

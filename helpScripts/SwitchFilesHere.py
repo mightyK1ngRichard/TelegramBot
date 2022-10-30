@@ -1,5 +1,6 @@
 # Copyright © 2022 mightyK1ngRichard <dimapermyakov55@gmail.com>
 
+TOKEN = '5715759447:AAFCFHQ9M1xLp_KRcKKe2Bqk_XORZXXo5vg'
 
 TIME_TABLE = {
     "числитель": {
@@ -83,45 +84,59 @@ class Card:
 
 
 CARDS = [
+    Card(name='Двойка', suit='Пики', number=2),
+    Card(name='Тройка', suit='Пики', number=3),
+    Card(name='Четвёрка', suit='Пики', number=4),
+    Card(name='Пятёрка', suit='Пики', number=5),
     Card(name='Шестёрка', suit='Пики', number=6),
     Card(name='Семёрка', suit='Пики', number=7),
     Card(name='Восьмёрка', suit='Пики', number=8),
     Card(name='Девятка', suit='Пики', number=9),
     Card(name='Десятка', suit='Пики', number=10),
-    Card(name='Валет', suit='Пики', number=8),
-    Card(name='Дама', suit='Пики', number=9),
-    Card(name='Король', suit='Пики', number=10),
+    Card(name='Валет', suit='Пики', number=2),
+    Card(name='Дама', suit='Пики', number=3),
+    Card(name='Король', suit='Пики', number=4),
     Card(name='Туз', suit='Пики', number=11),
 
+    Card(name='Двойка', suit='Крести', number=2),
+    Card(name='Тройка', suit='Крести', number=3),
+    Card(name='Четвёрка', suit='Крести', number=4),
+    Card(name='Пятёрка', suit='Крести', number=5),
     Card(name='Шестёрка', suit='Крести', number=6),
     Card(name='Семёрка', suit='Крести', number=7),
     Card(name='Восьмёрка', suit='Крести', number=8),
     Card(name='Девятка', suit='Крести', number=9),
     Card(name='Десятка', suit='Крести', number=10),
-    Card(name='Валет', suit='Крести', number=8),
-    Card(name='Дама', suit='Крести', number=9),
-    Card(name='Король', suit='Крести', number=10),
+    Card(name='Валет', suit='Крести', number=2),
+    Card(name='Дама', suit='Крести', number=3),
+    Card(name='Король', suit='Крести', number=4),
     Card(name='Туз', suit='Крести', number=11),
 
+    Card(name='Двойка', suit='Черви', number=2),
+    Card(name='Тройка', suit='Черви', number=3),
+    Card(name='Четвёрка', suit='Черви', number=4),
+    Card(name='Пятёрка', suit='Черви', number=5),
     Card(name='Шестёрка', suit='Черви', number=6),
     Card(name='Семёрка', suit='Черви', number=7),
     Card(name='Восьмёрка', suit='Черви', number=8),
     Card(name='Девятка', suit='Черви', number=9),
     Card(name='Десятка', suit='Черви', number=10),
-    Card(name='Валет', suit='Черви', number=8),
-    Card(name='Дама', suit='Черви', number=9),
-    Card(name='Король', suit='Черви', number=10),
+    Card(name='Валет', suit='Черви', number=2),
+    Card(name='Дама', suit='Черви', number=3),
+    Card(name='Король', suit='Черви', number=4),
     Card(name='Туз', suit='Черви', number=11),
 
+    Card(name='Двойка', suit='Буби', number=2),
+    Card(name='Тройка', suit='Буби', number=3),
+    Card(name='Четвёрка', suit='Буби', number=4),
+    Card(name='Пятёрка', suit='Буби', number=5),
     Card(name='Шестёрка', suit='Буби', number=6),
     Card(name='Семёрка', suit='Буби', number=7),
     Card(name='Восьмёрка', suit='Буби', number=8),
     Card(name='Девятка', suit='Буби', number=9),
     Card(name='Десятка', suit='Буби', number=10),
-    Card(name='Валет', suit='Буби', number=8),
-    Card(name='Дама', suit='Буби', number=9),
-    Card(name='Король', suit='Буби', number=10),
+    Card(name='Валет', suit='Буби', number=2),
+    Card(name='Дама', suit='Буби', number=3),
+    Card(name='Король', suit='Буби', number=4),
     Card(name='Туз', suit='Буби', number=11),
 ]
-
-TOKEN = '5715759447:AAFCFHQ9M1xLp_KRcKKe2Bqk_XORZXXo5vg'

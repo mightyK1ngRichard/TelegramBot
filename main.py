@@ -250,7 +250,6 @@ def game_second_step(message: types.Message, data: tuple):
             markup.add(*buttons)
             msg = bot.send_message(message.chat.id, 'Выберите кнопку:', reply_markup=markup)
             bot.register_next_step_handler(msg, twenty_one, all_data)
-
     else:
         bot.send_message(message.chat.id,
                          'НУ ТЫ ДЕБИЛ? Ну вот для кого я кнопки делал?!\nХорошо, что я умный и предугадал то, '

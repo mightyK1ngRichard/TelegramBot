@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8893adae-7596-4525-9f22-b40133136d7f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/helpScripts/SECRET.dmg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpScripts/SECRET/SwitchFilesHere.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpScripts/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpScripts/tests.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
@@ -48,7 +46,7 @@
       <recent name="$PROJECT_DIR$/utils" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main">
+  <component name="RunManager" selected="Python.tests">
     <configuration name="SwitchFilesHere" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TelegramBot" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -156,10 +154,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.tests" />
         <item itemvalue="Python.main" />
         <item itemvalue="Python.SwitchFilesHere" />
         <item itemvalue="Python.twentyOne" />
-        <item itemvalue="Python.tests" />
         <item itemvalue="Python.crossZero" />
       </list>
     </recent_temporary>

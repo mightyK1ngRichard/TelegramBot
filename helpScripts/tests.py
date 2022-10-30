@@ -19,8 +19,17 @@ def add_user() -> dict:
 
 
 def main():
-    with open("data.json", "a") as write_file:
-        json.dump(add_user(), write_file)
+    # with open("data.json", "a") as write_file:
+    #     json.dump(add_user(), write_file)
+    lst = input('> ')
+    print(str(lst))
+    if ',' not in str(lst)[1:-1]:
+        print('ПОЫЛВТПОДВ')
+    try:
+        lst = list(map(int, lst))
+    except ValueError:
+        print('ИДИОт!')
+    print(lst)
 
 
 if __name__ == '__main__':

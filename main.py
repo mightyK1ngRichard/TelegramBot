@@ -52,161 +52,169 @@ def main_text(message: types.Message):
 
 
 def twenty_one(message: types.Message, data: tuple):
-    user_sum, banker_sum, flag_for_banker = data
-    text = """"""
-    answer = True if message.text == 'Продолжить' else False
-    if not answer and not flag_for_banker:
-        res_game, user_sum_res, bot_sum = ('❗Вы победили', user_sum, banker_sum) if user_sum > banker_sum else (
-            '❗Ничья', user_sum, banker_sum) if user_sum == banker_sum else ('❗Банкир победил', user_sum, banker_sum)
-        bot.send_message(message.chat.id,
-                         text + f'{res_game}\nВаш результат: {user_sum_res}\nРезультат банкира: {bot_sum}')
-        menu(message, 'Выберите пункт меню.')
-        return
-
-    elif answer:
-        res = CARDS.pop(CARDS.index(choice(CARDS)))
-        user_sum += res.number
-        # bot.send_message(message.chat.id, f'Выпала карта: {res.name} {res.suit}')
-        text += f'Выпала карта: {res.name} {res.suit}\n'
-        if user_sum > 21:
-            bot.send_message(message.chat.id,
-                             text + f"❗️Вы проиграли!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
-            menu(message, 'Выберите пункт меню.')
-            return
-
-        elif user_sum == 21:
-            bot.send_message(message.chat.id,
-                             text + f"❗Вы победили!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
-            menu(message, 'Выберите пункт меню.')
-            return
-
-    # bot.send_message(message.chat.id, f'==> Сумма игрока = {user_sum}')
-    text += f'==> Сумма игрока = {user_sum}\n'
-    # Ход банкира.
-    if flag_for_banker:
-        res = CARDS.pop(CARDS.index(choice(CARDS)))
-        # bot.send_message(message.chat.id, f'Выпала карта: {res.name} {res.suit}')
-        text += f'Выпала карта: {res.name} {res.suit}\n'
-        banker_sum += res.number
-
-    if banker_sum > 21:
-        bot.send_message(message.chat.id,
-                         text + f"❗️Банкир проиграл!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
-        menu(message, 'Выберите пункт меню.')
-        return
-
-    elif banker_sum == 21:
-        bot.send_message(message.chat.id,
-                         text + f"❗️Банкир победил!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
-        menu(message, 'Выберите пункт меню.')
-        return
-
-    elif (banker_sum > 15 and answer) or (banker_sum > user_sum and not answer):
-        flag_for_banker = False
-        # bot.send_message(message.chat.id, '> Банкир перестал набирать карты!')
-        text += '> Банкир перестал набирать карты!\n'
+    if message.text in ['Продолжить', 'Стоп']:
+        user_sum, banker_sum, flag_for_banker = data
+        text = """"""
+        answer = True if message.text == 'Продолжить' else False
         if not answer and not flag_for_banker:
-            res_game, user_sum_res, bot_sum = (
-                '❗Игрок победил', user_sum, banker_sum) if user_sum > banker_sum else (
-                '❗Ничья', user_sum, banker_sum) if user_sum == banker_sum else (
-                '❗Банкир победил', user_sum, banker_sum)
+            res_game, user_sum_res, bot_sum = ('❗Вы победили', user_sum, banker_sum) if user_sum > banker_sum else (
+                '❗Ничья', user_sum, banker_sum) if user_sum == banker_sum else ('❗Банкир победил', user_sum, banker_sum)
             bot.send_message(message.chat.id,
                              text + f'{res_game}\nВаш результат: {user_sum_res}\nРезультат банкира: {bot_sum}')
             menu(message, 'Выберите пункт меню.')
             return
 
-    # Переход.
-    # bot.send_message(message.chat.id, f'==> Сумма банкира = {banker_sum}\n\n{"-" * 30}\n')
-    text += f'==> Сумма банкира = {banker_sum}\n'
-    bot.send_message(message.chat.id, text)
-    all_data = (user_sum, banker_sum, flag_for_banker)
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    buttons = [
-        types.KeyboardButton('Продолжить'),
-        types.KeyboardButton('Стоп'),
-    ]
-    markup.add(*buttons)
-    msg = bot.send_message(message.chat.id, 'Выберите кнопку:', reply_markup=markup)
-    bot.register_next_step_handler(msg, game_second_step, all_data)
+        elif answer:
+            res = CARDS.pop(CARDS.index(choice(CARDS)))
+            user_sum += res.number
+            # bot.send_message(message.chat.id, f'Выпала карта: {res.name} {res.suit}')
+            text += f'Выпала карта: {res.name} {res.suit}\n'
+            if user_sum > 21:
+                bot.send_message(message.chat.id,
+                                 text + f"❗️Вы проиграли!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
+                menu(message, 'Выберите пункт меню.')
+                return
+
+            elif user_sum == 21:
+                bot.send_message(message.chat.id,
+                                 text + f"❗Вы победили!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
+                menu(message, 'Выберите пункт меню.')
+                return
+
+        text += f'==> Сумма игрока = {user_sum}\n'
+        # Ход банкира.
+        if flag_for_banker:
+            res = CARDS.pop(CARDS.index(choice(CARDS)))
+            text += f'Выпала карта: {res.name} {res.suit}\n'
+            banker_sum += res.number
+
+        if banker_sum > 21:
+            bot.send_message(message.chat.id,
+                             text + f"❗️Банкир проиграл!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
+            menu(message, 'Выберите пункт меню.')
+            return
+
+        elif banker_sum == 21:
+            bot.send_message(message.chat.id,
+                             text + f"❗️Банкир победил!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
+            menu(message, 'Выберите пункт меню.')
+            return
+
+        elif (banker_sum > 15 and answer) or (banker_sum > user_sum and not answer):
+            flag_for_banker = False
+            text += '> Банкир перестал набирать карты!\n'
+            if not answer and not flag_for_banker:
+                res_game, user_sum_res, bot_sum = (
+                    '❗Игрок победил', user_sum, banker_sum) if user_sum > banker_sum else (
+                    '❗Ничья', user_sum, banker_sum) if user_sum == banker_sum else (
+                    '❗Банкир победил', user_sum, banker_sum)
+                bot.send_message(message.chat.id,
+                                 text + f'{res_game}\nВаш результат: {user_sum_res}\nРезультат банкира: {bot_sum}')
+                menu(message, 'Выберите пункт меню.')
+                return
+
+        # Переход.
+        text += f'==> Сумма банкира = {banker_sum}\n'
+        bot.send_message(message.chat.id, text)
+        all_data = (user_sum, banker_sum, flag_for_banker)
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        buttons = [
+            types.KeyboardButton('Продолжить'),
+            types.KeyboardButton('Стоп'),
+        ]
+        markup.add(*buttons)
+        msg = bot.send_message(message.chat.id, 'Выберите кнопку:', reply_markup=markup)
+        bot.register_next_step_handler(msg, game_second_step, all_data)
+
+    else:
+        bot.send_message(message.chat.id,
+                         'НУ ТЫ ДЕБИЛ? Ну вот для кого я кнопки делал?!\nХорошо, что я умный и предугадал то, '
+                         'что ты дебил!')
+        menu(message, 'Выберите пункт меню, дурачок: ')
+        return
 
 
 def game_second_step(message: types.Message, data: tuple):
-    user_sum, banker_sum, flag_for_banker = data
-    answer = True if message.text == 'Продолжить' else False
-    text = """"""
-    if not answer and not flag_for_banker:
-        res_game, user_sum_res, bot_sum = ('❗Вы победили', user_sum, banker_sum) if user_sum > banker_sum else (
-            '❗Ничья', user_sum, banker_sum) if user_sum == banker_sum else ('❗Банкир победил', user_sum, banker_sum)
-        bot.send_message(message.chat.id,
-                         text + f'{res_game}\nВаш результат: {user_sum_res}\nРезультат банкира: {bot_sum}')
-        menu(message, 'Выберите пункт меню.')
-        return
-
-    elif answer:
-        res = CARDS.pop(CARDS.index(choice(CARDS)))
-        user_sum += res.number
-        # bot.send_message(message.chat.id, f'Выпала карта: {res.name} {res.suit}')
-        text += f'Выпала карта: {res.name} {res.suit}\n'
-        if user_sum > 21:
-            bot.send_message(message.chat.id,
-                             text + f"❗️Вы проиграли!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
-            menu(message, 'Выберите пункт меню.')
-            return
-
-        elif user_sum == 21:
-            bot.send_message(message.chat.id,
-                             text + f"❗Вы победили!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
-            menu(message, 'Выберите пункт меню.')
-            return
-
-    # bot.send_message(message.chat.id, f'==> Сумма игрока = {user_sum}')
-    text += f'==> Сумма игрока = {user_sum}\n'
-    # Ход банкира.
-    if flag_for_banker:
-        res = CARDS.pop(CARDS.index(choice(CARDS)))
-        # bot.send_message(message.chat.id, f'Выпала карта: {res.name} {res.suit}')
-        text += f'Выпала карта: {res.name} {res.suit}\n'
-        banker_sum += res.number
-
-    if banker_sum > 21:
-        bot.send_message(message.chat.id,
-                         text + f"❗️Банкир проиграл!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
-        menu(message, 'Выберите пункт меню.')
-        return
-
-    elif banker_sum == 21:
-        bot.send_message(message.chat.id,
-                         text + f"❗️Банкир победил!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
-        menu(message, 'Выберите пункт меню.')
-        return
-
-    elif (banker_sum > 15 and answer) or (banker_sum > user_sum and not answer):
-        flag_for_banker = False
-        # bot.send_message(message.chat.id, '> Банкир перестал набирать карты!')
-        text += '> Банкир перестал набирать карты!\n'
+    if message.text in ['Продолжить', 'Стоп']:
+        user_sum, banker_sum, flag_for_banker = data
+        answer = True if message.text == 'Продолжить' else False
+        text = """"""
         if not answer and not flag_for_banker:
-            res_game, user_sum_res, bot_sum = (
-                '❗Игрок победил', user_sum, banker_sum) if user_sum > banker_sum else (
-                '❗Ничья', user_sum, banker_sum) if user_sum == banker_sum else (
-                '❗Банкир победил', user_sum, banker_sum)
+            res_game, user_sum_res, bot_sum = ('❗Вы победили', user_sum, banker_sum) if user_sum > banker_sum else (
+                '❗Ничья', user_sum, banker_sum) if user_sum == banker_sum else ('❗Банкир победил', user_sum, banker_sum)
             bot.send_message(message.chat.id,
                              text + f'{res_game}\nВаш результат: {user_sum_res}\nРезультат банкира: {bot_sum}')
             menu(message, 'Выберите пункт меню.')
             return
 
-    # Переход.
-    text += f'==> Сумма банкира = {banker_sum}\n'
-    bot.send_message(message.chat.id, text)
+        elif answer:
+            res = CARDS.pop(CARDS.index(choice(CARDS)))
+            user_sum += res.number
+            text += f'Выпала карта: {res.name} {res.suit}\n'
+            if user_sum > 21:
+                bot.send_message(message.chat.id,
+                                 text + f"❗️Вы проиграли!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
+                menu(message, 'Выберите пункт меню.')
+                return
 
-    all_data = (user_sum, banker_sum, flag_for_banker)
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    buttons = [
-        types.KeyboardButton('Продолжить'),
-        types.KeyboardButton('Стоп'),
-    ]
-    markup.add(*buttons)
-    msg = bot.send_message(message.chat.id, 'Выберите кнопку:', reply_markup=markup)
-    bot.register_next_step_handler(msg, twenty_one, all_data)
+            elif user_sum == 21:
+                bot.send_message(message.chat.id,
+                                 text + f"❗Вы победили!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
+                menu(message, 'Выберите пункт меню.')
+                return
+
+        text += f'==> Сумма игрока = {user_sum}\n'
+        # Ход банкира.
+        if flag_for_banker:
+            res = CARDS.pop(CARDS.index(choice(CARDS)))
+            text += f'Выпала карта: {res.name} {res.suit}\n'
+            banker_sum += res.number
+
+        if banker_sum > 21:
+            bot.send_message(message.chat.id,
+                             text + f"❗️Банкир проиграл!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
+            menu(message, 'Выберите пункт меню.')
+            return
+
+        elif banker_sum == 21:
+            bot.send_message(message.chat.id,
+                             text + f"❗️Банкир победил!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
+            menu(message, 'Выберите пункт меню.')
+            return
+
+        elif (banker_sum > 15 and answer) or (banker_sum > user_sum and not answer):
+            flag_for_banker = False
+            text += '> Банкир перестал набирать карты!\n'
+            if not answer and not flag_for_banker:
+                res_game, user_sum_res, bot_sum = (
+                    '❗Игрок победил', user_sum, banker_sum) if user_sum > banker_sum else (
+                    '❗Ничья', user_sum, banker_sum) if user_sum == banker_sum else (
+                    '❗Банкир победил', user_sum, banker_sum)
+                bot.send_message(message.chat.id,
+                                 text + f'{res_game}\nВаш результат: {user_sum_res}\nРезультат банкира: {bot_sum}')
+                menu(message, 'Выберите пункт меню.')
+                return
+
+        # Переход.
+        text += f'==> Сумма банкира = {banker_sum}\n'
+        bot.send_message(message.chat.id, text)
+
+        all_data = (user_sum, banker_sum, flag_for_banker)
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        buttons = [
+            types.KeyboardButton('Продолжить'),
+            types.KeyboardButton('Стоп'),
+        ]
+        markup.add(*buttons)
+        msg = bot.send_message(message.chat.id, 'Выберите кнопку:', reply_markup=markup)
+        bot.register_next_step_handler(msg, twenty_one, all_data)
+
+    else:
+        bot.send_message(message.chat.id,
+                         'НУ ТЫ ДЕБИЛ? Ну вот для кого я кнопки делал?!\nХорошо, что я умный и предугадал то, '
+                         'что ты дебил!')
+        menu(message, 'Выберите пункт меню, дурачок: ')
+        return
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -298,8 +306,32 @@ def choose_social_network(message: types.Message):
 
 
 def get_user_number(message: types.Message):
-    start_range, end_range = message.text.split(', ')
-    bot.send_message(message.chat.id, f"Ваше число: {str(randint(int(start_range.strip()), int(end_range.strip())))}")
+    res = message.text.split(',')
+    if len(res) > 4095:
+        bot.send_message(message.chat.id, 'Ну ты кнч жесть даун... Куда столько символов?')
+        menu(message, 'Выберите пункт меню: ')
+        return
+
+    if ',' not in str(res):
+        bot.send_message(message.chat.id, 'Идиот! Где запятая?')
+        menu(message, 'Выберите пункт меню: ')
+        return
+
+    try:
+        res = list(map(int, res))
+    except ValueError:
+        bot.send_message(message.chat.id, 'Ты идиот? Вводи числа!')
+        menu(message, 'Выберите пункт меню: ')
+        return
+
+    if len(res) != 2:
+        bot.send_message(message.chat.id, 'Идиот! Надо вводить два числа через запятую!')
+        menu(message, 'Выберите пункт меню: ')
+        return
+
+    start_range, end_range = res
+
+    bot.send_message(message.chat.id, f"Ваше число: {str(randint(start_range, end_range))}")
     menu(message, 'Выберите пункт меню.')
 
 

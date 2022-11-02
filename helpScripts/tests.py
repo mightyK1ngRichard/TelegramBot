@@ -20,8 +20,13 @@ def add_user() -> dict:
 
 
 def main():
-    with open("data.json", "a") as write_file:
-        json.dump(add_user(), write_file)
+    lst = []
+    lst.append(User(0, 'дима', 19, '0930'))
+    lst.append(User(1, 'вова', 19, '33'))
+    for el in lst:
+        if el.name == 'вова':
+            print(el.id_user)
+            break
 
 
 if __name__ == '__main__':

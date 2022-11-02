@@ -2,6 +2,11 @@
 import telebot
 from telebot import types
 
+"""
+Проблемы: 
+1. Начинать играть одновременно. Не заходить, когда другие уже начали, т.к. не знаю, как такое отслеживать.
+"""
+
 
 class Player:
     def __init__(self, id_user: int, user_name: str, user_role: str | None, choosing_partner: int | None):
@@ -62,7 +67,7 @@ def issuing_roles(call: types.CallbackQuery):
                 markup.add(*buttons)
                 msg = bot.send_message(call.message.chat.id, text=ALL_QUESTIONS[COUNTER_OF_QUESTIONS],
                                        reply_markup=markup)
-                
+
                 # TODO: ПОФИКСИТЬ СЧËТЧИК. Чтоб для каждого свой
                 COUNTER_OF_QUESTIONS += 1
                 for user in USERS:

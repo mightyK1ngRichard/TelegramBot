@@ -62,6 +62,8 @@ def issuing_roles(call: types.CallbackQuery):
                 markup.add(*buttons)
                 msg = bot.send_message(call.message.chat.id, text=ALL_QUESTIONS[COUNTER_OF_QUESTIONS],
                                        reply_markup=markup)
+                
+                # TODO: ПОФИКСИТЬ СЧËТЧИК. Чтоб для каждого свой
                 COUNTER_OF_QUESTIONS += 1
                 for user in USERS:
                     if user.user_id == call.message.chat.id:
@@ -76,6 +78,7 @@ def issuing_roles(call: types.CallbackQuery):
             if player.user_id == call.message.chat.id:
                 player.role = 'Главный игрок'
                 break
+        # TODO: ПОФИКСИТЬ СЧËТЧИК. Чтоб для каждого свой
         COUNTER_OF_QUESTIONS += 1
         bot.register_next_step_handler(msg, check_users)
 

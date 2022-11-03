@@ -15,10 +15,7 @@ def main():
         '0': Player('dima', None, None),
         '1': Player('Vova', None, None),
     }
-    for el, data in lst.items():
-        if data.name == 'Vova':
-            print(el)
-            break
+    print(len(lst))
 
 
 if __name__ == '__main__':

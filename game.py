@@ -20,10 +20,14 @@ class Player:
 
 TOKEN = '1933398269:AAESSDXK_KgOXtqJ0Io_zSfVvNw7BIwKikE'
 bot = telebot.TeleBot(token=TOKEN)
-ALL_QUESTIONS = ['Кого бы Вы взяли с собой в плавание?', 'Кто жёский?']  # Список вопросов.
-COUNTER_OF_QUESTIONS = 0  # Счётчик, сколько вопросов уже спросили.
-HOST_GAMER_ID: str  # ID главного игрока.
+ALL_QUESTIONS = ['Кого бы Вы взяли с собой в плавание?', 'Кто самый жёский?']  # Список вопросов.
+HOST_GAMER_ID: str = '0'  # ID главного игрока.
 USERS = dict()  # Словарь игроков. формат - id : Player
+# USERS = {
+#     '0': Player('Stas', 'Главный игрок', 1),
+#     '2': Player('Helen', 'Второстепенный игрок', 1),
+#     '1': Player('Vova', 'Второстепенный игрок', 2)
+# }
 WINNERS = 'Победили:\n'
 
 
@@ -58,14 +62,13 @@ def menu(message: types.Message, text_for_user: str):
 @bot.callback_query_handler(func=lambda call: True)
 def issuing_roles(call: types.CallbackQuery):
     if call.data == 'главный':
-        # Создаём кнопки из игроков.
-        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        buttons = [types.KeyboardButton(data.name) for user_id_from_dict, data in USERS.items()
-                   if user_id_from_dict != call.message.chat.id]
-
         # Проверим, есть ли уже главный игрок.
         for _, data in USERS.items():
             if data.role == 'Главный игрок':
+                # Создаём кнопки из игроков.
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                buttons = [types.KeyboardButton(data.name) for user_id_from_dict, data in USERS.items()
+                           if user_id_from_dict != call.message.chat.id]
                 bot.send_message(call.message.chat.id, 'Главный игрок уже есть!\nВаша роль: второстепенный игрок.')
                 markup.add(*buttons)
                 msg = bot.send_message(call.message.chat.id,
@@ -77,6 +80,9 @@ def issuing_roles(call: types.CallbackQuery):
                 bot.register_next_step_handler(msg, check_users)
 
         # Если всё хорошо.
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        buttons = [types.KeyboardButton(data.name) for user_id_from_dict, data in USERS.items()
+                   if user_id_from_dict != call.message.chat.id]
         markup.add(*buttons)
         msg = bot.send_message(call.message.chat.id,
                                text=ALL_QUESTIONS[USERS[call.message.chat.id].counter_for_question],
@@ -155,7 +161,7 @@ def game_chat(message: types.Message):
                                    reply_markup=types.ReplyKeyboardRemove())
             bot.register_next_step_handler(msg, waiting_for_finish)
 
-        elif USERS[message.chat.id].counter_for_question + 1 >= len(ALL_QUESTIONS):
+        elif USERS[message.chat.id].counter_for_question + 1 > len(ALL_QUESTIONS):
             for id_el, data in USERS.items():
                 WINNERS += data.name
                 WINNERS += '\n'
@@ -175,8 +181,9 @@ def game_chat(message: types.Message):
             msg = bot.send_message(message.chat.id,
                                    text=ALL_QUESTIONS[USERS[message.chat.id].counter_for_question],
                                    reply_markup=markup)
-            if USERS[message.chat.id].counter_for_question + 1 < len(ALL_QUESTIONS):
-                USERS[message.chat.id].counter_for_question += 1
+            # if USERS[message.chat.id].counter_for_question + 1 < len(ALL_QUESTIONS):
+            # TODO: Убедиться, что тут можно увеличивать счётчик.
+            USERS[message.chat.id].counter_for_question += 1
             bot.register_next_step_handler(msg, check_users)
 
 

@@ -113,48 +113,62 @@ def issuing_roles(call: types.CallbackQuery):
 
 
 def check_users(message: types.Message):
-    # Найдём индекс выбранного игрока в списке.
-    index_user_answer = 0
-    answer = message.text
-    for player_id_from_dict, data in USERS.items():
-        if data.name == answer:
-            index_user_answer = player_id_from_dict
-            break
+    if USERS[message.chat.id].role == 'Главный игрок':
+        answer = message.text
+        index_user_answer = 0
+        for player_id_from_dict, data in USERS.items():
+            if data.name == answer:
+                index_user_answer = player_id_from_dict
+                break
+        USERS[message.chat.id].choosing_partner = index_user_answer
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        markup.add(types.KeyboardButton('Продолжить'))
+        msg = bot.send_message(message.chat.id, 'Нажмите продолжить', reply_markup=markup)
+        bot.register_next_step_handler(msg, game_chat)
 
-    # Задали индекс человека, которого выбрали.
-    USERS[message.chat.id].choosing_partner = index_user_answer
+    else:
+        # Найдём индекс выбранного игрока в списке.
+        answer = message.text
+        index_user_answer = 0
+        for player_id_from_dict, data in USERS.items():
+            if data.name == answer:
+                index_user_answer = player_id_from_dict
+                break
 
-    # сверяем.
-    if int(USERS[str(HOST_GAMER_ID)].choosing_partner) == int(USERS[message.chat.id].choosing_partner) and int(
-            message.chat.id) != HOST_GAMER_ID:
-        msg = bot.send_message(message.chat.id, 'Ваш выбор совпал с выбором главного игрока!\nВы выбываете!',
-                               reply_markup=types.ReplyKeyboardRemove())
-        del (USERS[message.chat.id])
-        bot.register_next_step_handler(msg, waiting_for_finish)
+        # Задали индекс человека, которого выбрали.
+        USERS[message.chat.id].choosing_partner = index_user_answer
 
-    text = 'В игре остались:\n'
-    for id_el, data in USERS.items():
-        text += data.name
-        text += '\n'
-    text = text[0:-1]
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add(types.KeyboardButton('Продолжить'))
+        # сверяем.
+        if int(USERS[str(HOST_GAMER_ID)].choosing_partner) == int(USERS[message.chat.id].choosing_partner):
+            msg = bot.send_message(message.chat.id, 'Ваш выбор совпал с выбором главного игрока!\nВы выбываете!',
+                                   reply_markup=types.ReplyKeyboardRemove())
+            del (USERS[message.chat.id])
+            bot.register_next_step_handler(msg, waiting_for_finish)
 
-    msg = bot.send_message(message.chat.id, text, reply_markup=markup)
-    bot.register_next_step_handler(msg, game_chat)
+        else:
+            text = 'В игре остались:\n'
+            for id_el, data in USERS.items():
+                text += data.name
+                text += '\n'
+            text = text[0:-1]
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            markup.add(types.KeyboardButton('Продолжить'))
+
+            msg = bot.send_message(message.chat.id, text, reply_markup=markup)
+            bot.register_next_step_handler(msg, game_chat)
 
 
 def game_chat(message: types.Message):
     if message.text == 'Продолжить':
         # Если вопросов больше нет, очищаем список и заканчиваем игру.
         if USERS[message.chat.id].counter_for_question + 1 == len(ALL_QUESTIONS):
-            text = ''
+            text = 'Победили:\n'
             for id_el, data in USERS.items():
                 text += data.name
                 text += '\n'
             USERS.clear()
             text = text[0:-1]
-            msg = bot.send_message(message.chat.id, f'Вопросы закончились! Игра завершена. Победили:\n {text}',
+            msg = bot.send_message(message.chat.id, f'Вопросы закончились! Игра завершена. {text}',
                                    reply_markup=types.ReplyKeyboardRemove())
             bot.register_next_step_handler(msg, waiting_for_finish)
 

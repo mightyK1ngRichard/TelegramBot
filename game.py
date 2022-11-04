@@ -10,7 +10,7 @@ from telebot import types
 
 
 class Player:
-    def __init__(self, user_name: str, user_role: str | None = None, choosing_partner: int | None = None,
+    def __init__(self, user_name: str, user_role: str | None = None, choosing_partner: int = 0,
                  counter_for_question: int = 0):
         self.name = user_name
         self.role = user_role
@@ -22,12 +22,7 @@ TOKEN = '1933398269:AAESSDXK_KgOXtqJ0Io_zSfVvNw7BIwKikE'
 bot = telebot.TeleBot(token=TOKEN)
 ALL_QUESTIONS = ['Кого бы Вы взяли с собой в плавание?']  # Список вопросов.
 COUNTER_OF_QUESTIONS = 0  # Счётчик, сколько вопросов уже спросили.
-HOST_GAMER_ID: int = 0  # ID главного игрока.
-# USERS = {
-#     '0': Player('Stas', 'Главный игрок', int(1), 0),
-#     '1': Player('Vova', 'Второстепенный игрок', int(0), 0),
-#     '2': Player('Jura', 'Второстепенный игрок', int(1), 0),
-# }
+HOST_GAMER_ID: str  # ID главного игрока.
 USERS = dict()  # Словарь игроков. формат - id : Player
 
 
@@ -115,10 +110,10 @@ def issuing_roles(call: types.CallbackQuery):
 def check_users(message: types.Message):
     if USERS[message.chat.id].role == 'Главный игрок':
         answer = message.text
-        index_user_answer = 0
+        index_user_answer: int = 0
         for player_id_from_dict, data in USERS.items():
             if data.name == answer:
-                index_user_answer = player_id_from_dict
+                index_user_answer = int(player_id_from_dict)
                 break
         USERS[message.chat.id].choosing_partner = index_user_answer
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -129,22 +124,21 @@ def check_users(message: types.Message):
     else:
         # Найдём индекс выбранного игрока в списке.
         answer = message.text
-        index_user_answer = 0
+        index_user_answer: int = 0
         for player_id_from_dict, data in USERS.items():
             if data.name == answer:
-                index_user_answer = player_id_from_dict
+                index_user_answer = int(player_id_from_dict)
                 break
 
         # Задали индекс человека, которого выбрали.
         USERS[message.chat.id].choosing_partner = index_user_answer
 
         # сверяем.
-        if int(USERS[str(HOST_GAMER_ID)].choosing_partner) == int(USERS[message.chat.id].choosing_partner):
+        if USERS[HOST_GAMER_ID].choosing_partner == USERS[message.chat.id].choosing_partner:
             msg = bot.send_message(message.chat.id, 'Ваш выбор совпал с выбором главного игрока!\nВы выбываете!',
                                    reply_markup=types.ReplyKeyboardRemove())
             del (USERS[message.chat.id])
             bot.register_next_step_handler(msg, waiting_for_finish)
-
         else:
             text = 'В игре остались:\n'
             for id_el, data in USERS.items():
@@ -158,17 +152,24 @@ def check_users(message: types.Message):
             bot.register_next_step_handler(msg, game_chat)
 
 
+WINNERS = 'Победили:\n'
+
+
 def game_chat(message: types.Message):
+    global WINNERS
     if message.text == 'Продолжить':
-        # Если вопросов больше нет, очищаем список и заканчиваем игру.
-        if USERS[message.chat.id].counter_for_question + 1 == len(ALL_QUESTIONS):
-            text = 'Победили:\n'
+        if len(USERS) == 0:
+            msg = bot.send_message(message.chat.id, f'Вопросы закончились! Игра завершена. {WINNERS}',
+                                   reply_markup=types.ReplyKeyboardRemove())
+            bot.register_next_step_handler(msg, waiting_for_finish)
+
+        elif USERS[message.chat.id].counter_for_question + 1 >= len(ALL_QUESTIONS):
             for id_el, data in USERS.items():
-                text += data.name
-                text += '\n'
+                WINNERS += data.name
+                WINNERS += '\n'
             USERS.clear()
-            text = text[0:-1]
-            msg = bot.send_message(message.chat.id, f'Вопросы закончились! Игра завершена. {text}',
+            WINNERS = WINNERS[0:-1]
+            msg = bot.send_message(message.chat.id, f'Вопросы закончились! Игра завершена. {WINNERS}',
                                    reply_markup=types.ReplyKeyboardRemove())
             bot.register_next_step_handler(msg, waiting_for_finish)
 

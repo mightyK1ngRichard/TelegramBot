@@ -34,7 +34,15 @@ WINNERS = 'Победили:\n'
 @bot.message_handler(commands=['start'])
 def start(message: types.Message):
     USERS[message.chat.id] = Player(message.from_user.first_name)
+    text: str = f"Привет, {message.from_user.first_name}\nЭто игра между пользователями! Если вы один," \
+                f"кто добавлен в очередь, подождите, когда придёт кто-то ещё и нажмите /start"
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    markup.add(types.KeyboardButton('OK'))
+    msg = bot.send_message(message.chat.id, text, reply_markup=markup)
+    bot.register_next_step_handler(msg, start_help)
 
+
+def start_help(message: types.Message):
     if len(USERS) > 1:
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         markup.add(types.KeyboardButton('Старт'))

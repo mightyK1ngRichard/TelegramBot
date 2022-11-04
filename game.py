@@ -19,60 +19,55 @@ class Player:
 
 
 TOKEN = '1933398269:AAESSDXK_KgOXtqJ0Io_zSfVvNw7BIwKikE'
-
-# Список вопросов.
-ALL_QUESTIONS = ['Кого бы Вы взяли с собой в плавание?', '']
-COUNTER_OF_QUESTIONS = 0  # Счётчик, сколько вопросов уже спросили.
-HOST_GAMER_ID: int = 0
-
-USERS = dict()
-
 bot = telebot.TeleBot(token=TOKEN)
+ALL_QUESTIONS = ['Кого бы Вы взяли с собой в плавание?']  # Список вопросов.
+COUNTER_OF_QUESTIONS = 0  # Счётчик, сколько вопросов уже спросили.
+HOST_GAMER_ID: int = 0  # ID главного игрока.
+USERS = {
+    '0': Player('Stas', 'Главный игрок', int(1), 0),
+    '1': Player('Vova', 'Второстепенный игрок', int(0), 0),
+    '2': Player('Jura', 'Второстепенный игрок', int(1), 0),
+}  # Словарь игроков. формат - id : Player
+FLAG_START_GAME = False  # Флаг начала игры.
 
 
 @bot.message_handler(commands=['start'])
 def start(message: types.Message):
     USERS[message.chat.id] = Player(message.from_user.first_name)
-    text = f'Вы добавлены в игру под именем {message.from_user.first_name}'
-    bot.send_message(message.chat.id, text)
-    # -------------- Для тестов.
-    print(f'ID ==> {message.chat.id}')
-    print(len(USERS))
-    # --------------
-    if len(USERS) != 1:
-        markup = types.InlineKeyboardMarkup()
-        markup.add(types.InlineKeyboardButton('Старт'))
-        bot.send_message(message.chat.id,
-                         f'Ну что, народ собран! Вас: {len(USERS)} чел.\nНажмите кнопку старт и следуйте по кнопкам!',
-                         reply_markup=markup)
+    # text = f'Вы добавлены в очередь под именем: "{message.from_user.first_name}"'
+    if FLAG_START_GAME:
+        bot.send_message(message.chat.id, 'Игра уже идёт! Ждите конца!')
+
+    elif len(USERS) > 1 and not FLAG_START_GAME:
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+        markup.add(types.KeyboardButton('Старт'))
+        msg = bot.send_message(message.chat.id,
+                               f'Ну что, народ собран! Вас: {len(USERS)} чел.\nНажмите кнопку старт и следуйте по '
+                               f'кнопкам!', reply_markup=markup)
         # Если игрок только один, то ждём.
-        menu(message=message, text_for_user='Выберите свою роль:')
+        bot.register_next_step_handler(msg, menu, 'Выберите роль:')
 
 
 def menu(message: types.Message, text_for_user: str):
-    markup = types.InlineKeyboardMarkup()
-    buttons = [
-        types.InlineKeyboardButton(text='Главный игрок', callback_data='главный'),
-        types.InlineKeyboardButton(text='Второстепенный игрок', callback_data='второстепенный')
-    ]
-    markup.add(*buttons)
-    bot.send_message(message.chat.id, text=text_for_user, reply_markup=markup)
+    if message.text == 'Старт':
+        global FLAG_START_GAME
+        FLAG_START_GAME = True
+        markup = types.InlineKeyboardMarkup()
+        buttons = [
+            types.InlineKeyboardButton(text='Главный игрок', callback_data='главный'),
+            types.InlineKeyboardButton(text='Второстепенный игрок', callback_data='второстепенный')
+        ]
+        markup.add(*buttons)
+        bot.send_message(message.chat.id, text=text_for_user, reply_markup=markup)
 
 
 @bot.callback_query_handler(func=lambda call: True)
 def issuing_roles(call: types.CallbackQuery):
-    # ID_user = call.message.chat.id
     if call.data == 'главный':
         # Создаём кнопки из игроков.
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         buttons = [types.KeyboardButton(data.name) for user_id_from_dict, data in USERS.items()
                    if user_id_from_dict != call.message.chat.id]
-
-        if len(buttons) == 0:
-            msg = bot.send_message(call.message.chat.id,
-                                   'Игроков больше нет! Подождите, когда кто-то придёт и повторите попытку!')
-            menu(msg, 'Дождитесь игроков и выберите роль!')
-            return
 
         # Проверим, есть ли уже главный игрок.
         for _, data in USERS.items():
@@ -109,7 +104,7 @@ def issuing_roles(call: types.CallbackQuery):
                                reply_markup=markup)
         USERS[call.message.chat.id].counter_for_question += 1
         USERS[call.message.chat.id].role = 'Второстепенный игрок'
-        bot.register_next_step_handler(msg, check_users, 'Второстепенный игрок')
+        bot.register_next_step_handler(msg, check_users)
 
 
 def check_users(message: types.Message):
@@ -120,16 +115,25 @@ def check_users(message: types.Message):
         if data.name == answer:
             index_user_answer = player_id_from_dict
             break
+
     # Задали индекс человека, которого выбрали.
     USERS[message.chat.id].choosing_partner = index_user_answer
-    print(USERS[index_user_answer].name)
 
-    global HOST_GAMER_ID
     # сверяем.
-    if USERS[HOST_GAMER_ID].choosing_partner == USERS[message.chat.id].choosing_partner:
+    if int(USERS[str(HOST_GAMER_ID)].choosing_partner) == int(USERS[message.chat.id].choosing_partner) and int(
+            message.chat.id) != HOST_GAMER_ID:
         msg = bot.send_message(message.chat.id, 'Ваш выбор совпал с выбором главного игрока!\nВы выбываете!',
                                reply_markup=types.ReplyKeyboardRemove())
-        bot.next_step_backend(msg, start)
+        del (USERS[message.chat.id])
+        bot.register_next_step_handler(msg, waiting_for_finish)
+    else:
+        msg = bot.send_message(message.chat.id, 'Ваш выбор совпал с выбором главного игрока!\nВы выбываете!',
+                               reply_markup=types.ReplyKeyboardRemove())
+        bot.register_next_step_handler(msg, waiting_for_finish)
+
+
+def waiting_for_finish(message: types.Message):
+    print(f'Я {message.chat.id} в зале ожидания!')
 
 
 if __name__ == '__main__':

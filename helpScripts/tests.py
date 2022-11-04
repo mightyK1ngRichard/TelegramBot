@@ -12,10 +12,12 @@ class Player:
 
 def main():
     lst = {
-        '0': Player('dima', None, None),
-        '1': Player('Vova', None, None),
+        '0': 6,
+        '1': 2,
     }
-    print(len(lst))
+    print((lst))
+    del(lst['0'])
+    print((lst))
 
 
 if __name__ == '__main__':

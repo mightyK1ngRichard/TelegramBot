@@ -11,13 +11,13 @@ class Player:
 
 
 def main():
-    lst = {
-        '0': 6,
-        '1': 2,
+    d = {
+        5: 3,
+        4: 2
     }
-    print((lst))
-    del(lst['0'])
-    print((lst))
+    print(d)
+    d.clear()
+    print(d)
 
 
 if __name__ == '__main__':

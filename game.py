@@ -20,23 +20,17 @@ class Player:
 
 TOKEN = '1933398269:AAESSDXK_KgOXtqJ0Io_zSfVvNw7BIwKikE'
 bot = telebot.TeleBot(token=TOKEN)
-ALL_QUESTIONS = ['Кого бы Вы взяли с собой в плавание?']  # Список вопросов.
+ALL_QUESTIONS = ['Кого бы Вы взяли с собой в плавание?', 'Кто жёский?']  # Список вопросов.
 COUNTER_OF_QUESTIONS = 0  # Счётчик, сколько вопросов уже спросили.
 HOST_GAMER_ID: str  # ID главного игрока.
 USERS = dict()  # Словарь игроков. формат - id : Player
-
-
-# FLAG_START_GAME = False  # Флаг начала игры.
+WINNERS = 'Победили:\n'
 
 
 @bot.message_handler(commands=['start'])
 def start(message: types.Message):
     USERS[message.chat.id] = Player(message.from_user.first_name)
-    # text = f'Вы добавлены в очередь под именем: "{message.from_user.first_name}"'
-    # if FLAG_START_GAME:
-    #     bot.send_message(message.chat.id, 'Игра уже идёт! Ждите конца!')
 
-    # elif len(USERS) > 1 and not FLAG_START_GAME:
     if len(USERS) > 1:
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         markup.add(types.KeyboardButton('Старт'))
@@ -46,11 +40,12 @@ def start(message: types.Message):
         # Если игрок только один, то ждём.
         bot.register_next_step_handler(msg, menu, 'Выберите роль:')
 
+    else:
+        bot.send_message(message.chat.id, 'Вы тут одни. Дождитесь игрока и нажмите /start ещё раз.')
+
 
 def menu(message: types.Message, text_for_user: str):
     if message.text == 'Старт':
-        # global FLAG_START_GAME
-        # FLAG_START_GAME = True
         markup = types.InlineKeyboardMarkup()
         buttons = [
             types.InlineKeyboardButton(text='Главный игрок', callback_data='главный'),
@@ -152,9 +147,6 @@ def check_users(message: types.Message):
             bot.register_next_step_handler(msg, game_chat)
 
 
-WINNERS = 'Победили:\n'
-
-
 def game_chat(message: types.Message):
     global WINNERS
     if message.text == 'Продолжить':
@@ -169,8 +161,10 @@ def game_chat(message: types.Message):
                 WINNERS += '\n'
             USERS.clear()
             WINNERS = WINNERS[0:-1]
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+            markup.add(types.KeyboardButton('Закончить'))
             msg = bot.send_message(message.chat.id, f'Вопросы закончились! Игра завершена. {WINNERS}',
-                                   reply_markup=types.ReplyKeyboardRemove())
+                                   reply_markup=markup)
             bot.register_next_step_handler(msg, waiting_for_finish)
 
         else:
@@ -188,7 +182,7 @@ def game_chat(message: types.Message):
 
 def waiting_for_finish(message: types.Message):
     if len(USERS) == 0:
-        bot.send_message(message.chat.id, 'Игра закончена! Напишите "/start"')
+        bot.send_message(message.chat.id, 'Игра закончена! Напишите /start, чтобы сыграть снова!')
 
 
 if __name__ == '__main__':

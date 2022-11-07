@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8893adae-7596-4525-9f22-b40133136d7f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/game.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpScripts/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/helpScripts/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,7 +38,8 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;last.edited.regexp&quot;: &quot;Sample Text&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/dmitriy/PycharmProjects/TelegramBot&quot;
+    &quot;last_opened_file_path&quot;: &quot;/Users/dmitriy/PycharmProjects/TelegramBot&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -45,7 +48,7 @@
       <recent name="$PROJECT_DIR$/utils" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.game">
+  <component name="RunManager" selected="Python.tests">
     <configuration name="SwitchFilesHere" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TelegramBot" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -153,9 +156,9 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.tests" />
         <item itemvalue="Python.game" />
         <item itemvalue="Python.main" />
-        <item itemvalue="Python.tests" />
         <item itemvalue="Python.temp_bot" />
         <item itemvalue="Python.SwitchFilesHere" />
       </list>

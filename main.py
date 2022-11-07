@@ -201,7 +201,7 @@ def game_second_step(message: types.Message, data: tuple):
             text += f'Выпала карта: {res.name} {res.suit}\n'
             banker_sum += res.number
 
-        if banker_sum > 21:
+        if 21 < banker_sum:
             bot.send_message(message.chat.id,
                              text + f"❗️Банкир проиграл!\nСумма игрока: {user_sum}\nСумма банкира: {banker_sum}")
             menu(message, 'Выберите пункт меню.')
@@ -213,7 +213,7 @@ def game_second_step(message: types.Message, data: tuple):
             menu(message, 'Выберите пункт меню.')
             return
 
-        text += f'==> Сумма банкира = {banker_sum}\n'
+        text += f"==> Сумма банкира = {banker_sum}\n"
 
         if flag_for_banker:
             if (banker_sum > 17 and answer) or (banker_sum > user_sum and not answer):
